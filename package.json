@@ -1,0 +1,15 @@
+{
+  "name": "aira-corp",
+  "version": "1.0.0",
+  "description": "CTF Challenge - JWT alg:none vulnerability",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "nodemon server.js"
+  },
+  "dependencies": {
+    "cookie-parser": "^1.4.6",
+    "ejs": "^3.1.9",
+    "express": "^4.18.2"
+  }
+}

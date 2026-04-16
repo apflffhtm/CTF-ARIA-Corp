@@ -1,0 +1,446 @@
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ARIA Corp. | 관리자 패널 — PROMETHEUS</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Orbitron:wght@400;700;900&family=Noto+Sans+KR:wght@300;400;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --bg: #030810;
+        --panel: #050f1a;
+        --border: #0d3a5c;
+        --accent: #00d4ff;
+        --accent2: #ff4444;
+        --accent3: #ffcc00;
+        --text: #a8d8ea;
+        --muted: #3a6b8a;
+        --glow: 0 0 20px rgba(0, 212, 255, 0.4);
+        --gold-glow: 0 0 30px rgba(255, 204, 0, 0.5);
+      }
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        background: var(--bg);
+        color: var(--text);
+        font-family: "Noto Sans KR", sans-serif;
+        min-height: 100vh;
+        overflow-x: hidden;
+      }
+
+      body::before {
+        content: "";
+        position: fixed;
+        inset: 0;
+        background-image:
+          linear-gradient(rgba(255, 204, 0, 0.02) 1px, transparent 1px),
+          linear-gradient(90deg, rgba(255, 204, 0, 0.02) 1px, transparent 1px);
+        background-size: 40px 40px;
+        pointer-events: none;
+      }
+
+      header {
+        border-bottom: 1px solid var(--accent3);
+        padding: 14px 0;
+        background: rgba(5, 15, 26, 0.98);
+      }
+
+      .header-inner {
+        max-width: 1000px;
+        margin: 0 auto;
+        padding: 0 24px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+
+      .logo {
+        font-family: "Orbitron", monospace;
+        font-weight: 900;
+        font-size: 1.1rem;
+        color: var(--accent3);
+        text-shadow: var(--gold-glow);
+        letter-spacing: 4px;
+      }
+
+      .admin-badge {
+        font-family: "Share Tech Mono", monospace;
+        font-size: 0.7rem;
+        padding: 4px 12px;
+        background: rgba(255, 204, 0, 0.1);
+        border: 1px solid var(--accent3);
+        color: var(--accent3);
+        letter-spacing: 2px;
+      }
+
+      nav a {
+        font-family: "Share Tech Mono", monospace;
+        color: var(--muted);
+        text-decoration: none;
+        font-size: 0.82rem;
+        margin-left: 20px;
+        letter-spacing: 1px;
+        transition: color 0.2s;
+      }
+
+      nav a:hover {
+        color: var(--accent3);
+      }
+
+      .main {
+        position: relative;
+        z-index: 2;
+        max-width: 1000px;
+        margin: 0 auto;
+        padding: 40px 24px;
+      }
+
+      .breach-header {
+        text-align: center;
+        padding: 40px 0 32px;
+        position: relative;
+      }
+
+      .breach-label {
+        font-family: "Share Tech Mono", monospace;
+        font-size: 0.7rem;
+        color: var(--accent3);
+        letter-spacing: 4px;
+        margin-bottom: 12px;
+        animation: pulse 2s ease-in-out infinite;
+      }
+
+      @keyframes pulse {
+        0%,
+        100% {
+          opacity: 1;
+        }
+        50% {
+          opacity: 0.5;
+        }
+      }
+
+      .breach-title {
+        font-family: "Orbitron", monospace;
+        font-weight: 900;
+        font-size: clamp(1.6rem, 4vw, 2.6rem);
+        color: var(--accent3);
+        text-shadow: var(--gold-glow);
+        margin-bottom: 8px;
+      }
+
+      .breach-sub {
+        font-family: "Share Tech Mono", monospace;
+        font-size: 0.8rem;
+        color: var(--muted);
+        letter-spacing: 3px;
+      }
+
+      .flag-container {
+        border: 2px solid var(--accent3);
+        background: rgba(255, 204, 0, 0.04);
+        padding: 32px;
+        margin: 32px 0;
+        text-align: center;
+        position: relative;
+        overflow: hidden;
+      }
+
+      .flag-container::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background: radial-gradient(
+          ellipse at center,
+          rgba(255, 204, 0, 0.06) 0%,
+          transparent 70%
+        );
+        pointer-events: none;
+      }
+
+      .flag-label {
+        font-family: "Share Tech Mono", monospace;
+        font-size: 0.7rem;
+        color: var(--accent3);
+        letter-spacing: 4px;
+        margin-bottom: 16px;
+        opacity: 0.8;
+      }
+
+      .flag-value {
+        font-family: "Share Tech Mono", monospace;
+        font-size: clamp(1rem, 3vw, 1.4rem);
+        color: #ffffff;
+        letter-spacing: 2px;
+        background: rgba(0, 0, 0, 0.5);
+        border: 1px solid rgba(255, 204, 0, 0.3);
+        padding: 16px 24px;
+        display: inline-block;
+        text-shadow: 0 0 20px rgba(255, 255, 255, 0.3);
+        cursor: pointer;
+        transition: all 0.2s;
+        word-break: break-all;
+      }
+
+      .flag-value:hover {
+        background: rgba(255, 204, 0, 0.1);
+        text-shadow: 0 0 20px rgba(255, 204, 0, 0.8);
+      }
+
+      .flag-hint {
+        font-family: "Share Tech Mono", monospace;
+        font-size: 0.7rem;
+        color: var(--muted);
+        margin-top: 10px;
+      }
+
+      .files-panel {
+        border: 1px solid rgba(255, 204, 0, 0.3);
+        background: var(--panel);
+        padding: 24px;
+        margin-bottom: 20px;
+      }
+
+      .panel-label {
+        font-family: "Share Tech Mono", monospace;
+        font-size: 0.68rem;
+        color: var(--accent3);
+        letter-spacing: 3px;
+        margin-bottom: 20px;
+      }
+
+      .file-item {
+        display: flex;
+        align-items: center;
+        gap: 16px;
+        padding: 12px 0;
+        border-bottom: 1px solid rgba(13, 58, 92, 0.4);
+      }
+
+      .file-item:last-child {
+        border-bottom: none;
+      }
+
+      .file-icon {
+        font-size: 1.2rem;
+        flex-shrink: 0;
+      }
+
+      .file-info {
+        flex: 1;
+      }
+
+      .file-name {
+        font-family: "Share Tech Mono", monospace;
+        font-size: 0.82rem;
+        color: var(--text);
+        margin-bottom: 3px;
+      }
+
+      .file-meta {
+        font-family: "Share Tech Mono", monospace;
+        font-size: 0.68rem;
+        color: var(--muted);
+      }
+
+      .file-class {
+        font-family: "Share Tech Mono", monospace;
+        font-size: 0.65rem;
+        padding: 2px 8px;
+        border: 1px solid;
+      }
+
+      .class-top {
+        color: var(--accent2);
+        border-color: var(--accent2);
+        background: rgba(255, 68, 68, 0.08);
+      }
+      .class-secret {
+        color: var(--accent3);
+        border-color: var(--accent3);
+        background: rgba(255, 204, 0, 0.08);
+      }
+      .class-conf {
+        color: var(--accent);
+        border-color: var(--accent);
+        background: rgba(0, 212, 255, 0.08);
+      }
+
+      .log-panel {
+        border: 1px solid var(--border);
+        background: rgba(0, 0, 0, 0.4);
+        padding: 20px;
+        margin-bottom: 20px;
+      }
+
+      .log-line {
+        font-family: "Share Tech Mono", monospace;
+        font-size: 0.75rem;
+        line-height: 1.8;
+        color: #5a9fc0;
+      }
+
+      .log-line .ok {
+        color: #6bcb77;
+      }
+      .log-line .warn {
+        color: var(--accent3);
+      }
+      .log-line .err {
+        color: var(--accent2);
+      }
+
+      .glitch {
+        animation: glitch 4s infinite;
+      }
+
+      @keyframes glitch {
+        0%,
+        90%,
+        100% {
+          text-shadow: var(--gold-glow);
+        }
+        91% {
+          text-shadow:
+            4px 0 var(--accent2),
+            -4px 0 var(--accent);
+        }
+        93% {
+          text-shadow:
+            -4px 0 var(--accent2),
+            4px 0 var(--accent);
+        }
+        95% {
+          text-shadow: var(--gold-glow);
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <div class="header-inner">
+        <div class="logo">
+          ARIA<span style="color: var(--accent2)">.</span>CORP
+        </div>
+        <div style="display: flex; align-items: center; gap: 16px">
+          <div class="admin-badge">★ ADMIN ACCESS</div>
+          <nav>
+            <a href="/dashboard">대시보드</a>
+            <a href="/logout">로그아웃</a>
+          </nav>
+        </div>
+      </div>
+    </header>
+
+    <div class="main">
+      <div class="breach-header">
+        <div class="breach-label">// SECURITY BREACH DETECTED //</div>
+        <h1 class="breach-title glitch">침투 성공</h1>
+        <div class="breach-sub">
+          OPERATION PROMETHEUS · CLASSIFIED FILES UNLOCKED
+        </div>
+      </div>
+
+      <div class="log-panel">
+        <div class="log-line">
+          <span class="ok">[SUCCESS]</span> JWT signature verification bypassed
+          via alg:none attack
+        </div>
+        <div class="log-line">
+          <span class="ok">[SUCCESS]</span> Role escalation: guest → admin
+        </div>
+        <div class="log-line">
+          <span class="ok">[SUCCESS]</span> Admin panel access granted
+        </div>
+        <div class="log-line">
+          <span class="warn">[WARNING]</span> Unauthorized access to PROMETHEUS
+          classified files
+        </div>
+        <div class="log-line">
+          <span class="err">[CRITICAL]</span> Security audit triggered — ARIA
+          CORP IS COMPROMISED
+        </div>
+      </div>
+
+      <div class="flag-container">
+        <div class="flag-label">// FLAG CAPTURED //</div>
+        <div class="flag-value" onclick="copyFlag()" title="클릭하여 복사">
+          <%= flag %>
+        </div>
+        <div class="flag-hint">▲ 클릭하면 클립보드에 복사됩니다</div>
+      </div>
+
+      <div class="files-panel">
+        <div class="panel-label">// PROJECT PROMETHEUS — CLASSIFIED FILES</div>
+
+        <div class="file-item">
+          <div class="file-icon">📄</div>
+          <div class="file-info">
+            <div class="file-name">PROMETHEUS_BLUEPRINT_v9.2.pdf</div>
+            <div class="file-meta">2077.03.14 · 482MB · ARIA R&D DIVISION</div>
+          </div>
+          <div class="file-class class-top">TOP SECRET</div>
+        </div>
+
+        <div class="file-item">
+          <div class="file-icon">💾</div>
+          <div class="file-info">
+            <div class="file-name">NEURAL_OVERRIDE_CORE_DUMP.bin</div>
+            <div class="file-meta">2077.04.01 · 1.2GB · ARIA AI TEAM</div>
+          </div>
+          <div class="file-class class-top">TOP SECRET</div>
+        </div>
+
+        <div class="file-item">
+          <div class="file-icon">📊</div>
+          <div class="file-info">
+            <div class="file-name">GLOBAL_INFRA_CONTROL_MAP.xlsx</div>
+            <div class="file-meta">2077.04.09 · 89MB · ARIA OPS</div>
+          </div>
+          <div class="file-class class-secret">SECRET</div>
+        </div>
+
+        <div class="file-item">
+          <div class="file-icon">🔑</div>
+          <div class="file-info">
+            <div class="file-name">ADMIN_MASTER_KEYS_2077.txt</div>
+            <div class="file-meta">2077.04.15 · 2KB · ARIA SECURITY</div>
+          </div>
+          <div class="file-class class-secret">SECRET</div>
+        </div>
+
+        <div class="file-item">
+          <div class="file-icon">📝</div>
+          <div class="file-info">
+            <div class="file-name">INTERNAL_VULN_REPORT_JWT.md</div>
+            <div class="file-meta">2077.04.16 · 14KB · ARIA SEC TEAM</div>
+          </div>
+          <div class="file-class class-conf">CONFIDENTIAL</div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      function copyFlag() {
+        const flag = `<%= flag %>`;
+        navigator.clipboard.writeText(flag).then(() => {
+          const el = document.querySelector(".flag-value");
+          el.style.background = "rgba(255,204,0,0.2)";
+          el.style.color = "var(--accent3)";
+          setTimeout(() => {
+            el.style.background = "";
+            el.style.color = "";
+          }, 1000);
+        });
+      }
+    </script>
+  </body>
+</html>

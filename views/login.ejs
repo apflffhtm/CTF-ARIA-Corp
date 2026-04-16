@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ARIA Corp. | 인증 포털</title>
+  <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Orbitron:wght@400;700;900&family=Noto+Sans+KR:wght@300;400&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #030810;
+      --panel: #050f1a;
+      --border: #0d3a5c;
+      --accent: #00d4ff;
+      --accent2: #ff4444;
+      --text: #a8d8ea;
+      --muted: #3a6b8a;
+      --glow: 0 0 20px rgba(0,212,255,0.4);
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Noto Sans KR', sans-serif;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+    }
+
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(0,212,255,0.025) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0,212,255,0.025) 1px, transparent 1px);
+      background-size: 40px 40px;
+      animation: gs 25s linear infinite;
+    }
+
+    @keyframes gs { to { transform: translateY(40px); } }
+
+    body::after {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,0,0,0.1) 2px, rgba(0,0,0,0.1) 4px);
+      pointer-events: none;
+    }
+
+    .login-wrap {
+      position: relative;
+      z-index: 10;
+      width: 100%;
+      max-width: 420px;
+      padding: 20px;
+    }
+
+    .logo-area {
+      text-align: center;
+      margin-bottom: 32px;
+    }
+
+    .logo {
+      font-family: 'Orbitron', monospace;
+      font-weight: 900;
+      font-size: 1.6rem;
+      color: var(--accent);
+      text-shadow: var(--glow);
+      letter-spacing: 6px;
+    }
+
+    .logo span { color: #ff4444; }
+
+    .logo-sub {
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 0.7rem;
+      color: var(--muted);
+      letter-spacing: 3px;
+      margin-top: 6px;
+    }
+
+    .login-panel {
+      border: 1px solid var(--border);
+      background: rgba(5,15,26,0.95);
+      backdrop-filter: blur(20px);
+      padding: 40px;
+      position: relative;
+    }
+
+    .login-panel::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 2px;
+      background: linear-gradient(90deg, transparent, var(--accent), transparent);
+    }
+
+    .panel-title {
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 0.7rem;
+      color: var(--accent);
+      letter-spacing: 3px;
+      margin-bottom: 24px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .panel-title::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: var(--border);
+    }
+
+    .error-box {
+      background: rgba(255,68,68,0.1);
+      border: 1px solid rgba(255,68,68,0.4);
+      padding: 10px 14px;
+      margin-bottom: 20px;
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 0.78rem;
+      color: var(--accent2);
+      letter-spacing: 1px;
+    }
+
+    .form-group {
+      margin-bottom: 20px;
+    }
+
+    label {
+      display: block;
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 0.72rem;
+      color: var(--muted);
+      letter-spacing: 2px;
+      margin-bottom: 8px;
+    }
+
+    input {
+      width: 100%;
+      background: rgba(0,212,255,0.04);
+      border: 1px solid var(--border);
+      padding: 12px 14px;
+      color: var(--text);
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 0.9rem;
+      outline: none;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+
+    input:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 12px rgba(0,212,255,0.15);
+    }
+
+    input::placeholder { color: var(--muted); opacity: 0.5; }
+
+    .submit-btn {
+      width: 100%;
+      background: var(--accent);
+      color: #000;
+      border: none;
+      padding: 14px;
+      font-family: 'Orbitron', monospace;
+      font-weight: 700;
+      font-size: 0.8rem;
+      letter-spacing: 4px;
+      cursor: pointer;
+      margin-top: 8px;
+      clip-path: polygon(6px 0%, 100% 0%, calc(100% - 6px) 100%, 0% 100%);
+      transition: all 0.2s;
+    }
+
+    .submit-btn:hover {
+      background: #fff;
+      box-shadow: 0 0 24px rgba(0,212,255,0.5);
+    }
+
+    .back-link {
+      text-align: center;
+      margin-top: 20px;
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 0.75rem;
+    }
+
+    .back-link a {
+      color: var(--muted);
+      text-decoration: none;
+      letter-spacing: 1px;
+      transition: color 0.2s;
+    }
+
+    .back-link a:hover { color: var(--accent); }
+
+    .corner { position: absolute; width: 10px; height: 10px; border-color: var(--accent); border-style: solid; opacity: 0.6; }
+    .corner.tl { top: -1px; left: -1px; border-width: 2px 0 0 2px; }
+    .corner.tr { top: -1px; right: -1px; border-width: 2px 2px 0 0; }
+    .corner.bl { bottom: -1px; left: -1px; border-width: 0 0 2px 2px; }
+    .corner.br { bottom: -1px; right: -1px; border-width: 0 2px 2px 0; }
+  </style>
+</head>
+<body>
+
+<div class="login-wrap">
+  <div class="logo-area">
+    <div class="logo">ARIA<span>.</span>CORP</div>
+    <div class="logo-sub">INTERNAL AUTHENTICATION PORTAL</div>
+  </div>
+
+  <div class="login-panel">
+    <div class="corner tl"></div>
+    <div class="corner tr"></div>
+    <div class="corner bl"></div>
+    <div class="corner br"></div>
+
+    <div class="panel-title">// 계정 정보 확인</div>
+
+    <% if (error === 'invalid') { %>
+    <div class="error-box">⚠ 인증 실패 - 유효하지 않은 계정입니다.</div>
+    <% } else if (error === 'auth') { %>
+    <div class="error-box">⚠ 접근 거부 — 인증이 필요합니다</div>
+    <% } %>
+
+    <form method="POST" action="/login">
+      <div class="form-group">
+        <label>USER ID</label>
+        <input type="text" name="username" placeholder="identifier" autocomplete="off" required>
+      </div>
+      <div class="form-group">
+        <label>PASSPHRASE</label>
+        <input type="password" name="password" placeholder="••••••••" required>
+      </div>
+      <button type="submit" class="submit-btn">시스템 접근</button>
+    </form>
+
+    <div class="back-link">
+      <a href="/">← 브리핑으로 돌아가기</a>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>

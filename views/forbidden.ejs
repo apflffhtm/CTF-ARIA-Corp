@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <title>ARIA Corp. | ACCESS DENIED</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Orbitron:wght@900&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --bg: #030810;
+        --accent2: #ff4444;
+        --muted: #3a6b8a;
+        --text: #a8d8ea;
+      }
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      body {
+        background: var(--bg);
+        color: var(--text);
+        font-family: "Share Tech Mono", monospace;
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-direction: column;
+        gap: 20px;
+      }
+      body::before {
+        content: "";
+        position: fixed;
+        inset: 0;
+        background-image:
+          linear-gradient(rgba(255, 68, 68, 0.02) 1px, transparent 1px),
+          linear-gradient(90deg, rgba(255, 68, 68, 0.02) 1px, transparent 1px);
+        background-size: 40px 40px;
+      }
+      .code {
+        font-family: "Orbitron", monospace;
+        font-weight: 900;
+        font-size: clamp(4rem, 15vw, 9rem);
+        color: var(--accent2);
+        text-shadow: 0 0 40px rgba(255, 68, 68, 0.5);
+        position: relative;
+        z-index: 2;
+        animation: glitch 3s infinite;
+      }
+      @keyframes glitch {
+        0%,
+        92%,
+        100% {
+          text-shadow: 0 0 40px rgba(255, 68, 68, 0.5);
+        }
+        93% {
+          text-shadow:
+            6px 0 #00d4ff,
+            -6px 0 #ffcc00;
+        }
+        95% {
+          text-shadow:
+            -6px 0 #00d4ff,
+            6px 0 #ffcc00;
+        }
+        97% {
+          text-shadow: 0 0 40px rgba(255, 68, 68, 0.5);
+        }
+      }
+      .msg {
+        font-size: 0.9rem;
+        letter-spacing: 3px;
+        color: var(--accent2);
+        z-index: 2;
+      }
+      .sub {
+        font-size: 0.75rem;
+        color: var(--muted);
+        letter-spacing: 1px;
+        z-index: 2;
+        text-align: center;
+        line-height: 1.8;
+      }
+      .links {
+        z-index: 2;
+        display: flex;
+        gap: 20px;
+      }
+      a {
+        color: var(--muted);
+        text-decoration: none;
+        font-size: 0.78rem;
+        letter-spacing: 2px;
+        transition: color 0.2s;
+      }
+      a:hover {
+        color: #00d4ff;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="code">403</div>
+    <div class="msg">ACCESS DENIED</div>
+    <div class="sub">
+      현재 권한으로는 이 페이지에 접근할 수 없습니다.<br />
+      당신의 역할:
+      <strong style="color: #ff4444"
+        ><%= user ? user.role.toUpperCase() : 'UNKNOWN' %></strong
+      >
+      · 필요 권한: <strong style="color: #ffcc00">ADMIN</strong><br /><br />
+      어쩌면... 인증 토큰을 조작할 수 있지 않을까?
+    </div>
+    <div class="links">
+      <a href="/dashboard">← 대시보드</a>
+      <a href="/">홈으로</a>
+    </div>
+  </body>
+</html>
